@@ -1,0 +1,36 @@
+{
+  "name": "sender-jxlivestream",
+  "version": "1.0.0",
+  "description": "Servicio de envío de streaming al server, desde origen",
+  "main": "dist/sender.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/sender.ts",
+    "build": "tsc",
+    "start": "node dist/sender.js",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^8.62.1",
+    "@typescript-eslint/parser": "^8.62.1",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "tsx": "^4.22.4",
+    "typescript": "^5.3.3"
+  }
+}

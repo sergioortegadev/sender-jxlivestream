@@ -1,0 +1,11 @@
+sender/
+├── src/
+│   ├── sender.ts
+│   ├── config.ts
+│   ├── publisher.ts
+│   └── sources/
+│       ├── file.ts
+│       ├── ffmpeg-linux.ts
+│       └── ffmpeg-windows.ts
+├── media/
+    └── audio.mp3
