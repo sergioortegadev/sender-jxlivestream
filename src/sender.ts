@@ -1,84 +1,67 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import http from 'node:http';
-import https from 'node:https';
-import { fileURLToPath } from 'node:url';
-import { config as loadEnv } from 'dotenv';
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-console */
+import { Readable } from 'node:stream';
+import config from './config.js';
+import { publish } from './publisher.js';
 
-loadEnv();
+import { fileSource } from './sources/file.js';
+import { createLinuxFFmpegStream } from './sources/ffmpeg-linux.js';
+import { createWindowsFFmpegStream } from './sources/ffmpeg-windows.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+async function createSource(): Promise<Readable> {
+  switch (Number(config.mode)) {
+    case 0: {
+      console.log('📁 Modo desarrollo (archivo MP3)');
 
-const SERVER_URL =
-  process.env.SERVER_URL ??
-  'http://localhost:8000/publish';
-
-const MP3_FILE =
-  process.env.MP3_FILE ??
-  path.join(__dirname, '../media/audio.mp3');
-
-const CHUNK_SIZE = Number(process.env.CHUNK_SIZE ?? 4096);
-
-const BITRATE = Number(process.env.BITRATE ?? 128000); // bits por segundo
-
-const BYTES_PER_SECOND = BITRATE / 8;
-
-const CHUNK_INTERVAL =
-  Math.round((CHUNK_SIZE / BYTES_PER_SECOND) * 1000);
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function streamLoop() {
-  while (true) {
-    console.log(`▶ Reproduciendo ${MP3_FILE}`);
-
-    const url = new URL(SERVER_URL);
-
-    const client = url.protocol === 'https:' ? https : http;
-
-    const req = client.request(
-      SERVER_URL,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'audio/mpeg',
-          'Transfer-Encoding': 'chunked',
-        },
-      },
-      (res) => {
-        console.log(`Servidor respondió: ${res.statusCode}`);
-      }
-    );
-
-    req.on('error', (err) => {
-      console.error('Error enviando stream:', err);
-    });
-
-    const fd = fs.openSync(MP3_FILE, 'r');
-
-    const buffer = Buffer.alloc(CHUNK_SIZE);
-
-    try {
-      while (true) {
-        const bytesRead = fs.readSync(fd, buffer, 0, CHUNK_SIZE, null);
-
-        if (bytesRead === 0) {
-          break;
-        }
-
-        req.write(buffer.subarray(0, bytesRead));
-
-        await sleep(CHUNK_INTERVAL);
-      }
-    } finally {
-      fs.closeSync(fd);
-      req.end();
+      return Readable.from(
+        fileSource({
+          file: config.audioFile,
+          chunkSize: config.chunkSize,
+          bitrate: config.bitrate,
+        })
+      );
     }
 
-    console.log('↺ Reiniciando reproducción...\n');
+    case 1: {
+      console.log('🐧 Modo OBS Linux');
+
+      return createLinuxFFmpegStream(config.linuxDevice);
+    }
+
+    case 2: {
+      console.log('🪟 Modo OBS Windows');
+
+      return createWindowsFFmpegStream(config.windowsDevice);
+    }
+
+    default:
+      throw new Error(`MODE inválido: ${config.mode}`);
   }
 }
 
-streamLoop().catch(console.error);
+async function main() {
+  console.log('--------------------------------------');
+  console.log('     ⬆️ Jxlivestream Sender ⬆️');
+  console.log('--------------------------------------');
+  console.log(`   Servidor : ${config.serverUrl}`);
+  console.log(`   Modo     : ${config.mode}`);
+  console.log('--------------------------------------');
+
+  while (true) {
+    try {
+      const source = await createSource();
+
+      await publish(source, config.serverUrl);
+
+      console.log('Reconectando en 2 segundos...\n');
+
+      await new Promise((r) => setTimeout(r, 2000));
+    } catch (err) {
+      console.error(err);
+
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
+}
+
+main();
