@@ -41,12 +41,12 @@ const createSource = async (): Promise<Readable> => {
 }
 
 const main = async () => {
-  console.log('--------------------------------------------');
-  console.log('        ⬆️  Jxlivestream Sender ⬆️');
-  console.log('--------------------------------------------');
+  console.log('\n-----------------------------------------------------------');
+  console.log('              ⬆️  Jxlivestream Sender ⬆️');
+  console.log('-----------------------------------------------------------');
   console.log(`   Servidor : ${config.serverUrl}`);
   console.log(`   Modo     : ${config.mode}`);
-  console.log('--------------------------------------------');
+  console.log('-----------------------------------------------------------\n');
 
   while (true) {
     try {
@@ -54,7 +54,7 @@ const main = async () => {
 
       await publish(source, config.serverUrl);
 
-      console.log('Reconectando en 1 segundos...\n');
+      console.log('Reconectando en 1 segundo...\n');
 
       await new Promise((r) => setTimeout(r, 1000));
     } catch (err) {
