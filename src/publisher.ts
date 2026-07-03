@@ -26,12 +26,12 @@ export async function publish(source: Readable, serverUrl: string): Promise<void
         },
       },
       (res) => {
-        console.log(` ⬆️ ${simpleLog} ⬆️  Publisher conectado (${res.statusCode})`);
+        console.log(` ⬆️ ${simpleLog()} ⬆️  Publisher conectado (${res.statusCode})`);
 
         res.on('data', () => {});
 
         res.on('end', () => {
-          console.log(`${simpleLog} 📴 Conexión cerrada por servidor`);
+          console.log(`${simpleLog()} 📴 Conexión cerrada por servidor`);
           resolve();
         });
       }
@@ -50,7 +50,7 @@ export async function publish(source: Readable, serverUrl: string): Promise<void
     source.pipe(req);
 
     source.on('end', () => {
-      console.log('🎵 Fuente finalizada');
+      console.log(`${simpleLog()} 🎵 Fuente finalizada`);
       req.end();
     });
   });

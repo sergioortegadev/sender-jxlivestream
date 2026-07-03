@@ -12,7 +12,7 @@ import { simpleLog } from './helpers/helpers.js';
 const createSource = async (): Promise<Readable> => {
   switch (Number(config.mode)) {
     case 0: {
-      console.log(`${simpleLog()} 📁 Modo desarrollo (archivo MP3)`);
+      console.log(`${simpleLog()} 📁 Modo desarrollo (archivo MP3)\n`);
 
       return Readable.from(
         fileSource({
@@ -24,13 +24,13 @@ const createSource = async (): Promise<Readable> => {
     }
 
     case 1: {
-      console.log(`${simpleLog()} 🐧 Modo OBS Linux (en vivo)`);
+      console.log(`${simpleLog()} 🐧 Modo OBS Linux (en vivo)\n`);
 
       return createLinuxFFmpegStream(config.linuxDevice);
     }
 
     case 2: {
-      console.log(`${simpleLog()} 🪟 Modo OBS Windows (en vivo)`);
+      console.log(`${simpleLog()} 🪟 Modo OBS Windows (en vivo)\n`);
 
       return createWindowsFFmpegStream(config.windowsDevice);
     }
@@ -38,7 +38,7 @@ const createSource = async (): Promise<Readable> => {
     default:
       throw new Error(`MODE inválido: ${config.mode}`);
   }
-}
+};
 
 const main = async () => {
   console.log('--------------------------------------------');
@@ -63,6 +63,6 @@ const main = async () => {
       await new Promise((r) => setTimeout(r, 1000));
     }
   }
-}
+};
 
 main();

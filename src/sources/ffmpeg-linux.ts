@@ -2,16 +2,21 @@ import { spawn } from 'node:child_process';
 
 export function createLinuxFFmpegStream(device = 'default') {
   const ffmpeg = spawn('ffmpeg', [
+    '-hide_banner',
+
+    '-loglevel',
+    'warning',
+
     '-f',
     'pulse',
     '-i',
     device,
 
     '-ac',
-    '1',
+    '2',
 
     '-ar',
-    '44100',
+    '48000',
 
     '-c:a',
     'libmp3lame',

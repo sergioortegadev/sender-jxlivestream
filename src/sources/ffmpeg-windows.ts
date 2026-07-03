@@ -1,9 +1,12 @@
 import { spawn } from 'node:child_process';
 
-export function createWindowsFFmpegStream(
-  device = 'Microphone'
-) {
+export function createWindowsFFmpegStream(device = 'Microphone') {
   const ffmpeg = spawn('ffmpeg', [
+    '-hide_banner',
+
+    '-loglevel',
+    'warning',
+
     '-f',
     'dshow',
 
@@ -11,10 +14,10 @@ export function createWindowsFFmpegStream(
     `audio=${device}`,
 
     '-ac',
-    '1',
+    '2',
 
     '-ar',
-    '44100',
+    '48000',
 
     '-c:a',
     'libmp3lame',
