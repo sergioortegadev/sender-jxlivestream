@@ -7,11 +7,12 @@ import { publish } from './publisher.js';
 import { fileSource } from './sources/file.js';
 import { createLinuxFFmpegStream } from './sources/ffmpeg-linux.js';
 import { createWindowsFFmpegStream } from './sources/ffmpeg-windows.js';
+import { simpleLog } from './helpers/helpers.js';
 
-async function createSource(): Promise<Readable> {
+const createSource = async (): Promise<Readable> => {
   switch (Number(config.mode)) {
     case 0: {
-      console.log('📁 Modo desarrollo (archivo MP3)');
+      console.log(`${simpleLog()} 📁 Modo desarrollo (archivo MP3)`);
 
       return Readable.from(
         fileSource({
@@ -23,13 +24,13 @@ async function createSource(): Promise<Readable> {
     }
 
     case 1: {
-      console.log('🐧 Modo OBS Linux');
+      console.log(`${simpleLog()} 🐧 Modo OBS Linux (en vivo)`);
 
       return createLinuxFFmpegStream(config.linuxDevice);
     }
 
     case 2: {
-      console.log('🪟 Modo OBS Windows');
+      console.log(`${simpleLog()} 🪟 Modo OBS Windows (en vivo)`);
 
       return createWindowsFFmpegStream(config.windowsDevice);
     }
@@ -39,13 +40,13 @@ async function createSource(): Promise<Readable> {
   }
 }
 
-async function main() {
-  console.log('--------------------------------------');
-  console.log('     ⬆️ Jxlivestream Sender ⬆️');
-  console.log('--------------------------------------');
+const main = async () => {
+  console.log('--------------------------------------------');
+  console.log('        ⬆️  Jxlivestream Sender ⬆️');
+  console.log('--------------------------------------------');
   console.log(`   Servidor : ${config.serverUrl}`);
   console.log(`   Modo     : ${config.mode}`);
-  console.log('--------------------------------------');
+  console.log('--------------------------------------------');
 
   while (true) {
     try {
@@ -53,13 +54,13 @@ async function main() {
 
       await publish(source, config.serverUrl);
 
-      console.log('Reconectando en 2 segundos...\n');
+      console.log('Reconectando en 1 segundos...\n');
 
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 1000));
     } catch (err) {
       console.error(err);
 
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 1000));
     }
   }
 }

@@ -3,6 +3,7 @@ import http from 'node:http';
 import https from 'node:https';
 import { Readable } from 'node:stream';
 import config from './config.js';
+import { simpleLog } from './helpers/helpers.js';
 
 export async function publish(source: Readable, serverUrl: string): Promise<void> {
   const url = new URL(serverUrl);
@@ -25,12 +26,12 @@ export async function publish(source: Readable, serverUrl: string): Promise<void
         },
       },
       (res) => {
-        console.log(`📡 Publisher conectado (${res.statusCode})`);
+        console.log(` ⬆️ ${simpleLog} ⬆️  Publisher conectado (${res.statusCode})`);
 
         res.on('data', () => {});
 
         res.on('end', () => {
-          console.log('📴 Conexión cerrada por servidor');
+          console.log(`${simpleLog} 📴 Conexión cerrada por servidor`);
           resolve();
         });
       }
