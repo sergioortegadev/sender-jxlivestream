@@ -46,6 +46,8 @@ const main = async () => {
   console.log('--------------------------------------------');
   console.log(`   Servidor : ${config.serverUrl}`);
   console.log(`   Modo     : ${config.mode}`);
+  if (config.stationTitle)   console.log(`   Título   : ${config.stationTitle}`);
+  if (config.stationMessage) console.log(`   Mensaje  : ${config.stationMessage}`);
   console.log('--------------------------------------------');
 
   while (true) {
