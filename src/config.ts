@@ -2,6 +2,9 @@ import { config as loadEnv } from 'dotenv';
 
 loadEnv();
 
+// CLI args: node sender.js "Station Title" "Station Message"
+const [, , cliStationTitle, cliStationMessage] = process.argv;
+
 export default {
   mode: Number(process.env.MODE ?? 0),
 
@@ -18,4 +21,8 @@ export default {
   windowsDevice: process.env.WINDOWS_DEVICE ?? 'Microphone',
 
   publishToken: process.env.PUBLISH_TOKEN ?? '',
+
+  stationTitle: cliStationTitle ?? process.env.STATION_TITLE ?? '',
+
+  stationMessage: cliStationMessage ?? '',
 };

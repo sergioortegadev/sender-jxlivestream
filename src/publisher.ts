@@ -23,6 +23,8 @@ export async function publish(source: Readable, serverUrl: string): Promise<void
           'Transfer-Encoding': 'chunked',
           Connection: 'keep-alive',
           Authorization: `Bearer ${config.publishToken}`,
+          ...(config.stationTitle   && { 'X-Station-Title':   config.stationTitle }),
+          ...(config.stationMessage && { 'X-Station-Message': config.stationMessage }),
         },
       },
       (res) => {
