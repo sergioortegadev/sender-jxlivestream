@@ -2,8 +2,8 @@ import { config as loadEnv } from 'dotenv';
 
 loadEnv();
 
-// CLI args: node sender.js "Station Title" "Station Message"
-const [, , cliStationTitle, cliStationMessage] = process.argv;
+// CLI args: node sender.js "Station Title" "Station SubTitle" "Station Description"
+const [, , cliStationTitle, cliStationSubTitle, cliStationDescription] = process.argv;
 
 export default {
   mode: Number(process.env.MODE ?? 0),
@@ -24,5 +24,7 @@ export default {
 
   stationTitle: cliStationTitle ?? process.env.STATION_TITLE ?? '',
 
-  stationMessage: cliStationMessage ?? '',
+  stationSubTitle: cliStationSubTitle ?? '',
+
+  stationDescription: cliStationDescription ?? '',
 };

@@ -212,12 +212,22 @@ WINDOWS_DEVICE=Microphone (USB Audio Device)
 
 ### 5. Iniciar la transmisión
 
-Con OBS reproduciendo audio:
+Con OBS, u otra herramienta para la mezcla, reproduciendo audio:
 
 ```bash
 npm run dev
 ```
+También se puede incrustar el título de la estación, un subtítulo y una descripción en el comando, de esta forma:
+
+```bash
+npm run dev 'title' 'subtitle' 'long description'
+```
+Se sugiere un título de hasta 14 caracteres, un subtitulo de hasta 35 char, y la descripción puede ser un poco más extensa.
+
+
+
+#### Nota de funcionamiento:
 
 El Sender capturará la mezcla de audio y la enviará automáticamente al Backend.
 
-> **Importante:** No es necesario iniciar **Start Streaming** ni **Start Recording** en OBS. Basta con que OBS esté reproduciendo el audio que se desea transmitir.
+> **Importante:** No es necesario iniciar **Start Streaming** ni **Start Recording** en OBS. Basta con que OBS, u otra herramienta, esté reproduciendo el audio que se desea transmitir.
