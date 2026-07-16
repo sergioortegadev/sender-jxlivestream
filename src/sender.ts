@@ -41,14 +41,15 @@ const createSource = async (): Promise<Readable> => {
 };
 
 const main = async () => {
-  console.log('--------------------------------------------');
-  console.log('        ⬆️  Jxlivestream Sender ⬆️');
-  console.log('--------------------------------------------');
-  console.log(`   Servidor : ${config.serverUrl}`);
-  console.log(`   Modo     : ${config.mode}`);
-  if (config.stationTitle)   console.log(`   Título   : ${config.stationTitle}`);
-  if (config.stationMessage) console.log(`   Mensaje  : ${config.stationMessage}`);
-  console.log('--------------------------------------------');
+  console.log('-------------------------------------------------------');
+  console.log('              ⬆️  Jxlivestream Sender ⬆️');
+  console.log('-------------------------------------------------------');
+  console.log(`  Servidor: ${config.serverUrl}`);
+  console.log(`  Modo: ${config.mode}`);
+  if (config.stationTitle)   console.log(`  Título: ${config.stationTitle} | (14 char)`);
+  if (config.stationSubTitle) console.log(`  Subtítulo: ${config.stationSubTitle} | (35 char)`);
+  if (config.stationDescription) console.log(`  Descripción: ${config.stationDescription}`);
+  console.log('-------------------------------------------------------');
 
   while (true) {
     try {
