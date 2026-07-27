@@ -17,23 +17,55 @@ Captura audio desde un archivo MP3 (modo desarrollo) o desde FFmpeg (Linux / Win
 ## Variables de entorno
 
 ```env
+# 0 = archivo mp3 (desarrollo)
+# 1 = Linux
+# 2 = Windows
 MODE=0
 
 SERVER_URL=http://localhost:8000/publish
 
-PUBLISH_TOKEN=xxxxxxxxxxxxxxxx
 
 MP3_FILE=./media/audio.mp3
 
-LINUX_DEVICE=default
+LINUX_DEVICE=default o LINUX_DEVICE=alsa_output.pci-0000_00_1b.0.analog-stereo.monitor
 
 WINDOWS_DEVICE=Microphone
 
-BITRATE=128000
+BITRATE=64000
+
 CHUNK_SIZE=4096
+
+# Mono: '1', Stereo: '2'
+AUDIO_CHANNELS='2'
+
+# Muestreos disponibles: '48000', '32000', '16000' y '8000',
+AUDIO_SAMPLES='48000'
+
+PUBLISH_TOKEN=xxxxxxxxxxxxxxxx
 ```
 
 Ver la config de 'DEVICE' más abajo
+
+### BITRATE y CHUNK_SIZE
+
+**`BITRATE`** controla el bitrate de audio en bits por segundo.
+
+- En los modos FFmpeg (MODE=1 y MODE=2), este valor se pasa directamente a FFmpeg como `-b:a`, por lo que determina la calidad y el ancho de banda real del stream.
+- En el modo archivo (MODE=0), este valor **solo controla el pacing** (velocidad de envío de bytes). **No re-codifica el archivo.** El valor debe coincidir con el bitrate real del archivo MP3; de lo contrario el servidor recibirá datos más lento o más rápido que la tasa de reproducción, causando cortes o solapamiento.
+
+> Para usar un bitrate distinto en MODE=0, re-encodear el archivo primero:
+> ```bash
+> ffmpeg -i ./media/audio.mp3 -b:a 64k ./media/audio-64k.mp3
+> ```
+> Y actualizar `MP3_FILE=./media/audio-64k.mp3` en `.env`.
+
+**`CHUNK_SIZE`** define el tamaño en bytes de cada fragmento enviado. Junto con `BITRATE`, determina el intervalo entre envíos:
+
+```
+intervalo (ms) = (CHUNK_SIZE / (BITRATE / 8)) * 1000
+```
+
+Valores más pequeños de `CHUNK_SIZE` aumentan la frecuencia de envíos (menor latencia inicial en el servidor), pero incrementan el overhead. Valores más grandes reducen el overhead pero aumentan la latencia de buffer. El valor por defecto (4096–8192) es adecuado para la mayoría de los casos.
 
 ---
 

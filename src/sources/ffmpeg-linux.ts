@@ -1,4 +1,6 @@
+/* eslint-disable no-console */
 import { spawn } from 'node:child_process';
+import config from '../config.js';
 
 export function createLinuxFFmpegStream(device = 'default') {
   const ffmpeg = spawn('ffmpeg', [
@@ -13,16 +15,16 @@ export function createLinuxFFmpegStream(device = 'default') {
     device,
 
     '-ac',
-    '2',
+    `${config.audioChannels}`,
 
     '-ar',
-    '48000',
+    `${config.audioSamples}`,
 
     '-c:a',
     'libmp3lame',
 
     '-b:a',
-    '128k',
+    `${Math.round(config.bitrate / 1000)}k`,
 
     '-f',
     'mp3',
