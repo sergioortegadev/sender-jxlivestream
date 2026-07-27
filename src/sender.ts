@@ -12,7 +12,7 @@ import { simpleLog } from './helpers/helpers.js';
 const createSource = async (): Promise<Readable> => {
   switch (Number(config.mode)) {
     case 0: {
-      console.log(`${simpleLog()} 📁 Modo desarrollo (archivo MP3)\n`);
+      console.log(`${simpleLog()} 📁 Modo desarrollo (archivo MP3)\n  ⚠️ Tener en cuenta que coincidan: \n   bit rate del archivo y BITRATE en .env\n   En Modo desarrollo no se tienen en cuenta audio channels ni samples`);
 
       return Readable.from(
         fileSource({
@@ -41,15 +41,20 @@ const createSource = async (): Promise<Readable> => {
 };
 
 const main = async () => {
-  console.log('-------------------------------------------------------');
+  console.log('\n----------------------------------------------------------');
   console.log('              ⬆️  Jxlivestream Sender ⬆️');
-  console.log('-------------------------------------------------------');
+  console.log('----------------------------------------------------------');
   console.log(`  Servidor: ${config.serverUrl}`);
   console.log(`  Modo: ${config.mode}`);
   if (config.stationTitle)   console.log(`  Título: ${config.stationTitle} | (14 char)`);
   if (config.stationSubTitle) console.log(`  Subtítulo: ${config.stationSubTitle} | (35 char)`);
   if (config.stationDescription) console.log(`  Descripción: ${config.stationDescription}`);
-  console.log('-------------------------------------------------------');
+  console.log('----------------------------------------------------------');
+  if (config.bitrate) console.log(`  Bit Rate: ${config.bitrate} Kbps`);
+  if (config.chunkSize) console.log(`  Chunk Size: ${config.chunkSize} Kbps`);
+  if (config.audioChannels) console.log(`  Audio ${config.audioChannels === '2' ? 'Stereo' : 'Mono'}`);
+  if (config.audioSamples) console.log(`  Audio Samples: ${config.audioSamples} Hz`);
+  console.log(' · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·\n');
 
   while (true) {
     try {
